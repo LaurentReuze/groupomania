@@ -1,0 +1,22 @@
+.connexion{
+    display: flex;
+    margin-top: 50px;
+    .coprsConnexion{
+        width: 100%;
+        .forgotConnexion{
+            margin-top: 20px;
+            @include verticalCenter;
+            align-items: center;
+            justify-content: space-around;
+            a{
+                font-size: 16px;
+            }
+        }
+        .nouveauCompte{
+            margin-top: 20px;
+            a{
+                font-size: 16px;
+            }
+        }
+    }
+}

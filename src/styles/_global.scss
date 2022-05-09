@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'font1';
+    src: url('../assets/fonts/Raleway.ttf');
+}
+
+
+// --------------- Variables ----------------------
+
+// fonts
+
+$font1: font1, sans-serif;
+
+
+// Couleurs
+
+$colorPrimary: rgb(255,215,215);
+$colorSecondary: rgb(255,175,175);
+$colorTertiary: rgb(253,45,1);
+
+
+// ------------------- Mixins ------------------------
+
+@mixin verticalCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background : rgb(243, 243, 243);
+    font-family: $font1;
+}

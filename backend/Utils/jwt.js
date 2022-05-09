@@ -15,4 +15,12 @@ module.exports = {
       }
     );
   },
+  getUserId: function (token) {
+    // Decodage du token
+    const decodeToken = jwtoken.verify(token, privateKey);
+    // Déclaration UserId
+    const userId = decodeToken.userId;
+
+    return userId;
+  },
 };

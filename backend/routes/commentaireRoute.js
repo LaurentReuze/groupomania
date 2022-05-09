@@ -1,10 +1,11 @@
 const commentaireCtrl = require("../controllers/commentaireCtrl.js");
 const router = require("express").Router();
+const verifToken = require("../Utils/verifToken");
 
-router.post("/", commentaireCtrl.addCommentaire);
+router.post("/", verifToken, commentaireCtrl.addCommentaire);
 
-router.delete("/:id", commentaireCtrl.deleteCommentaire);
+router.delete("/:id", verifToken, commentaireCtrl.deleteCommentaire);
 
-router.put("/:id", commentaireCtrl.updateCommentaire);
+router.put("/:id", verifToken, commentaireCtrl.updateCommentaire);
 
 module.exports = router;

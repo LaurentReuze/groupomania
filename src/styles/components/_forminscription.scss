@@ -1,0 +1,21 @@
+.corpsInscription{
+    width: 100%;
+    height: 550px;
+    text-align: center;
+    @include verticalCenter;
+    flex-direction: column;
+    margin-top: 25px;
+    .blocInscription{
+        background-color: $colorPrimary;
+        border-radius: 20px;
+        width: 450px;
+        height: 550px;
+    }
+    div{
+        margin-top: 10px;
+    }
+
+    button{
+        margin-top: 20px;
+    }
+}

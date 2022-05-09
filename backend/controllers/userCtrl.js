@@ -9,7 +9,7 @@ const loginValidation = require("../validator/loginValidation.js");
 const User = db.users;
 const Post = db.posts;
 
-// Creation d'un nouvel utilisateur
+// ---------------------- Creation d'un nouvel utilisateur ------------------
 
 const addUser = async (req, res) => {
   const info = {
@@ -52,7 +52,7 @@ const addUser = async (req, res) => {
     });
 };
 
-// Recupération d'un utilisateur
+// --------------------- Login de l'utilisateur ---------------------------
 
 const getOneUser = async (req, res) => {
   // Validation des données
@@ -82,7 +82,7 @@ const getOneUser = async (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// Modification de l'utilisateur
+// -------------------- Modification de l'utilisateur ----------------------
 
 const updateUser = async (req, res) => {
   const id = req.params.id;
@@ -90,19 +90,25 @@ const updateUser = async (req, res) => {
   res.status(200);
 };
 
-// Récupération des posts de l'utilisateur
+// -------------------- Récupération des posts de l'utilisateur ----------------
 
 const getUserPost = async (req, res) => {
-  const data = await User.findAll({
+  // --------- recupération du numéro id de l'utilisateur via le token ------------
+  // récupération du token
+  const token = req.headers.authorization.split(" ")[1];
+  const userId = jwt.getUserId(token);
+  //
+  const data = await User.findOne({
     include: [
       {
         model: Post,
         as: "post",
       },
     ],
-    where: { id: 2 }, // Ce chiffre est pour l'exemple il faudra recupérer dynamiquement l'id de l'utilisateur
+    where: { id: userId }, // Ce chiffre est pour l'exemple il faudra recupérer dynamiquement l'id de l'utilisateur
   });
-  res.status(200).send("Les posts ont été récupérés");
+  res.status(200).send(data.post);
+  console.log(data);
 };
 
 module.exports = {

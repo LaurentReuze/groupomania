@@ -1,14 +1,15 @@
 const postCtrl = require("../controllers/postCtrl.js");
 const router = require("express").Router();
+const verifToken = require("../Utils/verifToken");
 
-router.get("/", postCtrl.getAllPost);
+router.get("/", verifToken, postCtrl.getAllPost);
 
-router.get("/:id", postCtrl.getOnePost);
+router.get("/:id", verifToken, postCtrl.getOnePost);
 
-router.post("/", postCtrl.addPost);
+router.post("/", verifToken, postCtrl.addPost);
 
-router.delete("/:id", postCtrl.deletePost);
+router.delete("/:id", verifToken, postCtrl.deletePost);
 
-router.put("/:id", postCtrl.updatePost);
+router.put("/:id", verifToken, postCtrl.updatePost);
 
 module.exports = router;

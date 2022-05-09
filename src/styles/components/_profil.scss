@@ -1,0 +1,36 @@
+.corpsProfil{
+    display: flex;
+    flex-direction: column;
+    height: 800px;
+    .cadreHaut{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 40%;
+        background-color: $colorPrimary;
+        padding-left: 20px;
+        padding-right: 20px;
+        .partieGauche{
+            background-color: $colorSecondary;
+            height: 80%;
+            width: 25%;
+        }
+        
+
+        .cercle{
+            background-color: $colorTertiary;
+            width: 250px;
+            height: 250px;
+            border-radius: 125px;
+        }
+
+        .partieDroite{
+            background-color: $colorSecondary;
+            height: 80%;
+            width: 25%;
+        }
+    }
+    .cadreBas{
+        height: 60%;
+    }
+}
