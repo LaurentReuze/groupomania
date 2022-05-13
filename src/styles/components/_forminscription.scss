@@ -10,12 +10,20 @@
         border-radius: 20px;
         width: 450px;
         height: 550px;
+
+        p{
+            font-size: 14px;
+            color: red;
+            font-weight: bold;
+        }
     }
     div{
         margin-top: 10px;
     }
+    .submit{
+        input{
+            width: 200px;
+        }
 
-    button{
-        margin-top: 20px;
     }
 }

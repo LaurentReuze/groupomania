@@ -7,7 +7,9 @@ const Forget = () => {
         <h1>Récupération de mot de passe</h1>
         <span>Merci de saisir votre email :</span>
         <input type="text" placeholder="Saisir votre email" />
-        <button>Soumettre</button>
+        <div className="submit">
+          <input type="submit" value="Soumettre" />
+        </div>
       </div>
     </div>
   );

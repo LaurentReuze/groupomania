@@ -23,4 +23,12 @@ module.exports = {
 
     return userId;
   },
+  getIsAdmin: function (token) {
+    // Decodage du token
+    const decodeToken = jwtoken.verify(token, privateKey);
+    // Déclaration isAdmin
+    const isAdmin = decodeToken.isAdmin;
+
+    return isAdmin;
+  },
 };

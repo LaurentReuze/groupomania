@@ -7,7 +7,7 @@ const userRoute = require("./routes/userRoute.js");
 const app = express();
 
 const corOptions = {
-  origin: "https://localhost:3000",
+  origin: "http://localhost:3001",
 };
 
 // middleware

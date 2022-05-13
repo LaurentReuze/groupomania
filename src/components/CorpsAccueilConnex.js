@@ -3,7 +3,6 @@ import Connexion from "./Connexion";
 import Description from "./Description";
 
 const CorpsAccueilConnex = () => {
-  console.log(window.location);
   return (
     <div className="corps">
       <div className="partieGauche">

@@ -2,7 +2,7 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("../Utils/jwt.js");
 const signupValidation = require("../validator/signupValidation.js");
-const loginValidation = require("../validator/loginValidation.js");
+const loginValidation = require("../validator/loginValidation");
 
 // create main model
 
@@ -56,8 +56,9 @@ const addUser = async (req, res) => {
 
 const getOneUser = async (req, res) => {
   // Validation des données
+
   const { error } = loginValidation(req.body);
-  if (error) return res.status(401).json(error.details[0].message);
+  if (error) return res.status(401).json(error.details);
 
   const finduser = await User.findOne({ where: { email: req.body.email } })
     .then((user) => {
@@ -66,6 +67,7 @@ const getOneUser = async (req, res) => {
       }
       console.log(req.body.password);
       console.log(user.password);
+      // console.log(process.env.PRIVATE_KEY);
       bcrypt
         .compare(req.body.password, user.password)
         .then((valid) => {
@@ -73,7 +75,6 @@ const getOneUser = async (req, res) => {
             return res.status(401).json({ error: "Mot de passe incorrect !" });
           }
           res.status(200).json({
-            userId: user.id,
             token: jwt.generateTokenForUser(user),
           });
         })
@@ -111,9 +112,14 @@ const getUserPost = async (req, res) => {
   console.log(data);
 };
 
+const requireAuth = async (req, res) => {
+  res.status(200).send(res.userId);
+};
+
 module.exports = {
   addUser,
   getOneUser,
   updateUser,
   getUserPost,
+  requireAuth,
 };

@@ -6,7 +6,7 @@ const NavMenu = () => {
     <div className="navigation">
       <img src="./logoEntete.png" alt="logo entreprise" />
       <ul>
-        <NavLink to={"/actualite"}>
+        <NavLink to={"/"}>
           <li>Accueil</li>
         </NavLink>
       </ul>
@@ -16,7 +16,7 @@ const NavMenu = () => {
         </NavLink>
       </ul>
       <ul>
-        <NavLink to={"/"}>
+        <NavLink to={"/login"}>
           <li>Se Connecter</li>
         </NavLink>
       </ul>
