@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("../Utils/jwt.js");
 const signupValidation = require("../validator/signupValidation.js");
 const loginValidation = require("../validator/loginValidation");
+const privateKey = process.env.PRIVATE_KEY;
+const jwtoken = require("jsonwebtoken");
 
 // create main model
 
@@ -96,7 +98,7 @@ const updateUser = async (req, res) => {
 const getUserPost = async (req, res) => {
   // --------- recupération du numéro id de l'utilisateur via le token ------------
   // récupération du token
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.headers.cookie.split("=")[1];
   const userId = jwt.getUserId(token);
   //
   const data = await User.findOne({
@@ -112,8 +114,20 @@ const getUserPost = async (req, res) => {
   console.log(data);
 };
 
+// ------------------------- Vérification de la présence du token ---------------------------------
+
 const requireAuth = async (req, res) => {
-  res.status(200).send(res.userId);
+  // console.log(req.headers.cookie);
+  const token = req.headers.cookie.split("=")[1];
+  // jwtoken.verify vérifie le token avec la clé Publique
+  // On recupère un objet JS
+  const decodeToken = jwtoken.verify(token, privateKey);
+  // on recupère le userId de l'objet JS decodeToken
+  const userId = decodeToken.userId;
+  const isAdmin = decodeToken.isAdmin;
+  const userObj = { userId, isAdmin };
+
+  res.status(200).json({ userObj });
 };
 
 module.exports = {

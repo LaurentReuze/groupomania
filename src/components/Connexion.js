@@ -22,7 +22,7 @@ const Connexion = () => {
       // Elle permet de pouvoir changer facilement une seule fois l'adresse au lieu d'aller
       // partout dans le code pour changer l'adresse
       url: `${process.env.REACT_APP_API_URL}api/auth/login`,
-      // withCredentials: false,
+      withCredentials: true,
       data: {
         email: email,
         password: password,

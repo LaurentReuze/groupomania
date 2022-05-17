@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import BlocActualite from "../components/BlocActualite";
 import BlocTendance from "../components/BlocTendance";
 import BlocUtilisateur from "../components/BlocUtilisateur";
 import NavMenu from "../components/NavMenu";
+import { UidContext } from "../components/AppContext";
 
 const Actualite = () => {
-  console.log(window.location);
+  // console.log(window.location);
+
   return (
     <div>
       <NavMenu />

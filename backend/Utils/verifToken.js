@@ -1,6 +1,6 @@
 // MiddleWare qui vérifie le token
 
-const privateKey = "TDAHu84KRXgLa7PAA5piEP7lxYBt5GT7RxvRSHeE";
+const privateKey = process.env.PRIVATE_KEY;
 const jwtoken = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     // On recupère le token dans le header / Authorization
     // split(' ') signifie l'espace qu'il y a entre Beare et le token
     // [1] correspond au second élément du tableau (le token)
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.cookie.split("=")[1];
     // jwtoken.verify vérifie le token avec la clé Publique
     // On recupère un objet JS
     const decodeToken = jwtoken.verify(token, privateKey);

@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config({ path: "./config/.env" });
 const cors = require("cors");
 const commentaireRoute = require("./routes/commentaireRoute.js");
 const postRoute = require("./routes/postRoute.js");
@@ -6,13 +7,13 @@ const userRoute = require("./routes/userRoute.js");
 
 const app = express();
 
-const corOptions = {
-  origin: "http://localhost:3001",
-};
-
 // middleware
-
-app.use(cors(corOptions));
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 

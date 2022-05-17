@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const privateKey = "TDAHu84KRXgLa7PAA5piEP7lxYBt5GT7RxvRSHeE";
+const privateKey = process.env.PRIVATE_KEY;
 
 module.exports = {
   generateTokenForUser: function (userData) {
@@ -17,7 +17,7 @@ module.exports = {
   },
   getUserId: function (token) {
     // Decodage du token
-    const decodeToken = jwtoken.verify(token, privateKey);
+    const decodeToken = jwt.verify(token, privateKey);
     // Déclaration UserId
     const userId = decodeToken.userId;
 
@@ -25,7 +25,7 @@ module.exports = {
   },
   getIsAdmin: function (token) {
     // Decodage du token
-    const decodeToken = jwtoken.verify(token, privateKey);
+    const decodeToken = jwt.verify(token, privateKey);
     // Déclaration isAdmin
     const isAdmin = decodeToken.isAdmin;
 
