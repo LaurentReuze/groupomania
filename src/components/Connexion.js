@@ -38,6 +38,19 @@ const Connexion = () => {
         console.log(err);
 
         const tabErreur = err.response.data;
+        const loginError = err.response.data.errorLogin;
+        const passwordError = err.response.data.errorPassword;
+
+        if (loginError) {
+          console.log(loginError);
+          document.querySelector(".validatorEmail").innerHTML = loginError;
+        }
+
+        if (passwordError) {
+          console.log(passwordError);
+          document.querySelector(".validatorPassword").innerHTML =
+            passwordError;
+        }
 
         for (let index = 0; index < tabErreur.length; index++) {
           const messageErreur = tabErreur[index].message;

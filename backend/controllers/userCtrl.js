@@ -65,7 +65,7 @@ const getOneUser = async (req, res) => {
   const finduser = await User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ error: "Utilisateur non trouvé" });
+        return res.status(401).json({ errorLogin: "Utilisateur non trouvé" });
       }
       console.log(req.body.password);
       console.log(user.password);
@@ -74,7 +74,9 @@ const getOneUser = async (req, res) => {
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
-            return res.status(401).json({ error: "Mot de passe incorrect !" });
+            return res
+              .status(401)
+              .json({ errorPassword: "Mot de passe incorrect !" });
           }
           res.status(200).json({
             token: jwt.generateTokenForUser(user),
