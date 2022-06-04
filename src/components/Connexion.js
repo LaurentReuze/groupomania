@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import SetCookie from "../hooks/SetCookie";
 import RemoveCookie from "../hooks/RemoveCookie";
+import { UidContext } from "../components/AppContext";
 
 const Connexion = () => {
+  const uid = useContext(UidContext);
+
   // Constante email et password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +33,7 @@ const Connexion = () => {
     })
       .then((res) => {
         RemoveCookie("Groupomania");
-        console.log(res.data.token);
+        console.log(res.data);
         SetCookie("Groupomania", res.data.token);
         window.location = "/";
       })
@@ -102,7 +105,7 @@ const Connexion = () => {
           {/* Bouton Connexion et lien mdp oublié*/}
           <div className="forgotConnexion">
             <a href="/forgot">Mot de passe oublié</a>
-            <input type="submit" value="Connexion" />
+            <input type="submit" value={"Connexion"} />
           </div>
         </form>
         <br />

@@ -1,7 +1,7 @@
 const joi = require("joi");
 
 function userValidation(body) {
-  const passwordValidateSchema = joi
+  const loginValidateSchema = joi
     .object({
       email: joi.string().email().trim().required().messages({
         "string.base": `Le format de l'email est invalide`,
@@ -18,7 +18,7 @@ function userValidation(body) {
       }),
     })
     .options({ abortEarly: false });
-  return passwordValidateSchema.validate(body);
+  return loginValidateSchema.validate(body);
 }
 
 module.exports = userValidation;

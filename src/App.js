@@ -9,6 +9,8 @@ import { UidContext } from "./components/AppContext";
 import axios from "axios";
 
 const App = () => {
+  // -------------- Contrôle de la présence d'un cookie ----------------
+
   const [uid, setUid] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   // La fonction de controle du token se lance dès le début du programme avec useEffect
@@ -26,7 +28,13 @@ const App = () => {
           console.log({ uid });
           console.log({ isAdmin });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(window.location.pathname);
+          console.log(err);
+          // if (window.location.pathname !== "/login") {
+          //   window.location = "/login";
+          // }
+        });
     };
     controleToken();
   }, [uid]);

@@ -1,41 +1,39 @@
-.corpsActualite{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
+h1{
+    text-align: center;
+}
+.filsActualite{
+    border: 1px solid grey;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
     h4{
-        margin-top: 10px;
         text-align: center;
     }
-    .partieGauche{
-        margin-left: 20px;
-        background-color: $colorPrimary;
-        height:750px;
-        width: 23%;
-        border-radius: 20px;
-    }
-    .partieCentre{
-        background-color: $colorPrimary;
-        height:750px;
-        width: 45%;
-        border-radius: 20px;
-        
-    }
-    .partieDroite{
-        margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    form{
         display: flex;
         flex-direction: column;
-        justify-content:space-between;
-        width: 23%;
-        .tendance{
-            border-radius: 20px;
-            background-color: $colorPrimary;
-            height: 45%;
-            margin-bottom: 50px;
+        font-family: $font1;
+        label{
+            font-size: 0.9em;
         }
-        .suggestion{
-            border-radius: 20px;
-            background-color: $colorPrimary;
-            height: 45%;
+        .titrePost{
+            width: auto;
+            font-size: 0.9em;
+        }
+        textarea{
+            font-family: $font1;
+            font-size: 1em;
+            padding: 5px;
+        }
+        .photoPost{
+            border-radius: 0px;
+            cursor: pointer;
         }
     }
+
 }

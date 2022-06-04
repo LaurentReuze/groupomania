@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavMenu from "../components/NavMenu";
+import { UidContext } from "../components/AppContext";
 
 const Profil = () => {
+  const uid = useContext(UidContext);
+
   return (
-    <div>
+    <div className="profil-page">
       <NavMenu />
-      <div className="corpsProfil">
-        <div className="cadreHaut">
-          <div className="partieGauche"></div>
-          <div className="cercle"></div>
-          <div className="partieDroite"></div>
-        </div>
-        <div className="cadreBas">
+      {uid ? (
+        <div className="corpsProfil">
+          <div className="cadreHaut">
+            <div className="partieGauche"></div>
+            <div className="cercle"></div>
+            <div className="partieDroite"></div>
+          </div>
+          <div className="cadreBas"></div>
           <p>Dernier Post</p>
         </div>
-      </div>
+      ) : (
+        (window.location = "/login")
+      )}
     </div>
   );
 };

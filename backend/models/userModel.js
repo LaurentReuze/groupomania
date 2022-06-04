@@ -1,4 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
+  console.log("#################################");
+  console.log("Je suis passé par le fichier User Model");
+  console.log("#################################");
   const User = sequelize.define("user", {
     email: {
       allowNull: false,

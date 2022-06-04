@@ -1,13 +1,16 @@
 const userCtrl = require("../controllers/userCtrl.js");
-const verifToken = require("../Utils/verifToken.js");
 const router = require("express").Router();
+const verifToken = require("../Utils/verifToken");
+const multer = require("../config/multer-config");
 
-router.post("/signup", userCtrl.addUser);
+router.post("/signup", multer, userCtrl.addUser);
 
 router.post("/login", userCtrl.getOneUser);
 
-router.get("/profil", userCtrl.getUserPost);
+router.get("/profil", verifToken, userCtrl.getUserPost);
 
 router.get("/cookie", userCtrl.requireAuth);
+
+router.get("/:id", userCtrl.getInfoUser);
 
 module.exports = router;

@@ -14,20 +14,20 @@ const Post = db.posts;
 // ---------------------- Creation d'un nouvel utilisateur ------------------
 
 const addUser = async (req, res) => {
-  const info = {
+  const newUser = {
     email: req.body.email,
     password: req.body.password,
     nom: req.body.nom,
     prenom: req.body.prenom,
-    photo: req.body.photo,
+    photo: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     isAdmin: req.body.isAdmin ? req.body.isAdmin : false,
   };
 
   // Validation des données
-  const { error } = signupValidation(info);
-  if (error) return res.status(401).json(error.details[0].message);
+  const { error } = signupValidation(req.body);
+  if (error) return res.status(401).json(error.details);
 
-  const finduser = await User.findOne({ where: { email: info.email } })
+  const findUser = await User.findOne({ where: { email: newUser.email } })
     .then(function (userFound) {
       if (!userFound) {
         bcrypt.hash(req.body.password, 10).then((hashPassword) => {
@@ -36,15 +36,23 @@ const addUser = async (req, res) => {
             password: hashPassword,
             nom: req.body.nom,
             prenom: req.body.prenom,
-            photo: req.body.photo,
+            photo: `${req.protocol}://${req.get("host")}/images/${
+              req.file.filename
+            }`,
             isAdmin: req.body.isAdmin ? req.body.isAdmin : false,
           };
-          User.create(user);
-          res.status(201).json({ message: "Utilisateur créé !" });
+          User.create(user).then((user) => {
+            User.findOne({ where: { email: user.email } }).then(function (
+              entries
+            ) {
+              // console.log(entries);
+              res.status(201).json({ token: jwt.generateTokenForUser(user) });
+            });
+          });
         });
       } else {
         return res.status(409).json({
-          error: `Un compte a déjà été crée avec l'adresse ${info.email} `,
+          errorIdemAdress: `Un compte a déjà été crée avec l'adresse ${req.body.email} `,
         });
       }
     })
@@ -86,6 +94,12 @@ const getOneUser = async (req, res) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
+// -------------------- récupération des données de l'utilisateur ----------------------
+const getInfoUser = async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findOne({ where: { id: id } });
+  res.status(200).send(user);
+};
 
 // -------------------- Modification de l'utilisateur ----------------------
 
@@ -119,17 +133,22 @@ const getUserPost = async (req, res) => {
 // ------------------------- Vérification de la présence du token ---------------------------------
 
 const requireAuth = async (req, res) => {
-  // console.log(req.headers.cookie);
-  const token = req.headers.cookie.split("=")[1];
-  // jwtoken.verify vérifie le token avec la clé Publique
-  // On recupère un objet JS
-  const decodeToken = jwtoken.verify(token, privateKey);
-  // on recupère le userId de l'objet JS decodeToken
-  const userId = decodeToken.userId;
-  const isAdmin = decodeToken.isAdmin;
-  const userObj = { userId, isAdmin };
+  const reqCookie = req.headers.cookie;
+  if (reqCookie) {
+    // console.log(req.headers.cookie);
+    const token = req.headers.cookie.split("=")[1];
+    // jwtoken.verify vérifie le token avec la clé Publique
+    // On recupère un objet JS
+    const decodeToken = jwtoken.verify(token, privateKey);
+    // on recupère le userId de l'objet JS decodeToken
+    const userId = decodeToken.userId;
+    const isAdmin = decodeToken.isAdmin;
+    const userObj = { userId, isAdmin };
 
-  res.status(200).json({ userObj });
+    res.status(200).json({ userObj });
+  } else {
+    res.status(401).json({ message: "Aucun Cookie" });
+  }
 };
 
 module.exports = {
@@ -138,4 +157,5 @@ module.exports = {
   updateUser,
   getUserPost,
   requireAuth,
+  getInfoUser,
 };

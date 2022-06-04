@@ -5,6 +5,7 @@ const jwtoken = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
+    console.log(req);
     // On recupère le token dans le header / Authorization
     // split(' ') signifie l'espace qu'il y a entre Beare et le token
     // [1] correspond au second élément du tableau (le token)
@@ -16,6 +17,7 @@ module.exports = (req, res, next) => {
     const userId = decodeToken.userId;
     const isAdmin = decodeToken.isAdmin;
     req.auth = { userId, isAdmin };
+    console.log(req);
     // le premier req.body vérifie si il y a un userId dans la requete
     // req.body.userId && req.body.userId vérifie si il y a un userId ET qu'il est différent
     // de userId du token
@@ -25,6 +27,7 @@ module.exports = (req, res, next) => {
       next();
     }
   } catch {
+    console.log("Aucun Cookie valide sur le poste");
     res.status(401).json({
       error: new Error("Invalid request!"),
     });

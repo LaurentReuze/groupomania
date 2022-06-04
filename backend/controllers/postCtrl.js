@@ -9,10 +9,19 @@ const Commentaire = db.commentaires;
 // 1. create Post
 
 const addPost = async (req, res) => {
+  console.log("#####################################################");
+  console.log(req.body);
+  console.log("#####################################################");
+  console.log(
+    `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+  );
+  console.log("#####################################################");
+
   const info = {
     titre: req.body.titre,
     contenu: req.body.contenu,
-    image: req.body.image,
+    photo: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+    idUSER: req.body.idUSER,
   };
 
   const post = await Post.create(info);
