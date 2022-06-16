@@ -15,7 +15,7 @@ const FormInscription = () => {
     e.preventDefault();
 
     console.log("###################################");
-    console.log(photo);
+    // console.log(photo);
     console.log("###################################");
 
     document.querySelector(".validatorEmail").innerHTML = "";

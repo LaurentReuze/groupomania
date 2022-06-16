@@ -3,9 +3,12 @@ h1{
 }
 .filsActualite{
     border: 1px solid grey;
+    border-radius: 20px;
     margin-left: 50px;
     margin-right: 50px;
     margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     h4{
         text-align: center;
     }
@@ -24,6 +27,7 @@ h1{
         .titrePost{
             width: auto;
             font-size: 0.9em;
+            border: 1px solid grey;
         }
         textarea{
             font-family: $font1;
@@ -33,6 +37,10 @@ h1{
         .photoPost{
             border-radius: 0px;
             cursor: pointer;
+        }
+        .btnSend{
+            border: 1px solid grey;
+            
         }
     }
 

@@ -4,6 +4,7 @@ const cors = require("cors");
 const commentaireRoute = require("./routes/commentaireRoute.js");
 const postRoute = require("./routes/postRoute.js");
 const userRoute = require("./routes/userRoute.js");
+const path = require("path");
 
 const app = express();
 
@@ -22,8 +23,12 @@ app.use(express.urlencoded({ extended: true }));
 // routers
 
 app.use("/api/auth", userRoute);
-app.use("/api/commentaire", commentaireRoute);
+app.use("/api/comment", commentaireRoute);
 app.use("/api/post", postRoute);
+
+// Récupération des images
+
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // testing api
 

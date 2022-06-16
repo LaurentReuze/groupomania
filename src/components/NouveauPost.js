@@ -1,15 +1,25 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addPost, setPostsData } from "../feature/postsSlice";
 import { UidContext } from "./AppContext";
 
 const NouveauPost = () => {
   const [titrePost, setTitrePost] = useState("");
   const [corpMessage, setCorpMessage] = useState("");
-  const [image, setImage] = useState();
+  const [image, setImage] = useState("gfdq");
   const uid = useContext(UidContext);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const data2 = {
+      titre: titrePost,
+      contenu: corpMessage,
+      photo: image,
+      idUSER: uid,
+    };
 
     axios({
       method: "post",
@@ -24,8 +34,8 @@ const NouveauPost = () => {
       },
     })
       .then((res) => {
-        console.log(res);
         window.location = "/";
+        // dispatch(addPost(data2));
       })
       .catch((err) => {
         console.log(err);

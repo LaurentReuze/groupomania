@@ -1,0 +1,29 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .commentContainer{
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // border: 1px solid grey;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color:$colorSecondary;
+        .descriptionComment{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .contenuComment{
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .iconsLine{
+            justify-content: end;
+        }
+    }
+
+}

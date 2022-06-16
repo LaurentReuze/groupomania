@@ -5,12 +5,14 @@ const multer = require("../config/multer-config");
 
 router.get("/", verifToken, postCtrl.getAllPost);
 
+//router.get("/user/:userId")
+
 router.get("/:id", verifToken, postCtrl.getOnePost);
 
 router.post("/", verifToken, multer, postCtrl.addPost);
 
 router.delete("/:id", verifToken, postCtrl.deletePost);
 
-router.put("/:id", verifToken, multer, postCtrl.updatePost);
+router.put("/:id", verifToken, postCtrl.updatePost);
 
 module.exports = router;

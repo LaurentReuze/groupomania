@@ -7,10 +7,14 @@ import MdpOublie from "./pages/MdpOublie";
 import Profil from "./pages/Profil";
 import { UidContext } from "./components/AppContext";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setConnexionsData } from "./feature/connexionSlice";
 
 const App = () => {
   // -------------- Contrôle de la présence d'un cookie ----------------
 
+  const dispatch = useDispatch();
+  // const uid = useSelector((state) => state.connexions.connexions.userId)
   const [uid, setUid] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   // La fonction de controle du token se lance dès le début du programme avec useEffect
@@ -22,19 +26,16 @@ const App = () => {
         withCredentials: true,
       })
         .then((res) => {
-          console.log(res.data.userObj);
+          dispatch(setConnexionsData(res.data.userObj));
           setUid(res.data.userObj.userId);
           setIsAdmin(res.data.userObj.isAdmin);
-          console.log({ uid });
-          console.log({ isAdmin });
         })
         .catch((err) => {
-          console.log(window.location.pathname);
-          console.log(err);
           // if (window.location.pathname !== "/login") {
           //   window.location = "/login";
           // }
         });
+      // console.log(uid);
     };
     controleToken();
   }, [uid]);

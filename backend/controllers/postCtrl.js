@@ -1,6 +1,7 @@
 const db = require("../models");
 
 // Creation d'un modèle principal
+const User = db.users;
 const Post = db.posts;
 const Commentaire = db.commentaires;
 
@@ -10,19 +11,20 @@ const Commentaire = db.commentaires;
 
 const addPost = async (req, res) => {
   console.log("#####################################################");
-  console.log(req.body);
-  console.log("#####################################################");
-  console.log(
-    `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-  );
+  console.log("Controlleur création Post");
   console.log("#####################################################");
 
-  const info = {
+  let info = {
     titre: req.body.titre,
     contenu: req.body.contenu,
-    photo: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     idUSER: req.body.idUSER,
   };
+
+  if (req.file) {
+    info.photo = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+  }
 
   const post = await Post.create(info);
   res.status(200).send(post);
@@ -31,12 +33,23 @@ const addPost = async (req, res) => {
 // Recuperer tout les posts
 
 const getAllPost = async (req, res) => {
-  const posts = await Post.findAll({}); // A mettre aussi une récupération des commentaires
+  console.log("#####################################################");
+  console.log("Controlleur récupération de tous les posts");
+  console.log("#####################################################");
+
+  const posts = await Post.findAll({
+    include: [User, Commentaire],
+    order: ["createdAt"],
+  });
+  // console.log(posts);
   res.status(200).send(posts);
 };
 
 // Récuperer un post
 const getOnePost = async (req, res) => {
+  console.log("#####################################################");
+  console.log("Controlleur récupération d'un seul Post");
+  console.log("#####################################################");
   const id = req.params.id;
   const post = await Post.findOne({ where: { id: id } });
   res.status(200).send(post);
@@ -44,13 +57,22 @@ const getOnePost = async (req, res) => {
 
 // Modifier un post
 const updatePost = async (req, res) => {
+  console.log("#####################################################");
+  console.log("Controlleur Modification Post");
+  console.log("#####################################################");
+  console.log(req.body);
+  console.log("#####################################################");
   const id = req.params.id;
+  console.log(id);
   const post = await Post.update(req.body, { where: { id: id } });
   res.status(200).send(post);
 };
 
 // Supprimer un Post
 const deletePost = async (req, res) => {
+  console.log("#####################################################");
+  console.log("Controlleur suppréssion d'un Post");
+  console.log("#####################################################");
   const id = req.params.id;
   await Post.destroy({ where: { id: id } });
   res.status(200).send("Le post a été supprimé");
@@ -59,6 +81,9 @@ const deletePost = async (req, res) => {
 // Récupération des commentaire du post
 
 const getCommentairePost = async (req, res) => {
+  console.log("#####################################################");
+  console.log("Controlleur des commentaires d'un Post");
+  console.log("#####################################################");
   const data = await Post.findAll({
     include: [
       {

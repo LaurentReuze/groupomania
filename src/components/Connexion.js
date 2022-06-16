@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import SetCookie from "../hooks/SetCookie";
 import RemoveCookie from "../hooks/RemoveCookie";
-import { UidContext } from "../components/AppContext";
+import { useDispatch } from "react-redux";
+import { setUsersData } from "../feature/usersSlice";
 
 const Connexion = () => {
-  const uid = useContext(UidContext);
+  const dispatch = useDispatch();
 
   // Constante email et password
   const [email, setEmail] = useState("");
@@ -33,7 +34,6 @@ const Connexion = () => {
     })
       .then((res) => {
         RemoveCookie("Groupomania");
-        console.log(res.data);
         SetCookie("Groupomania", res.data.token);
         window.location = "/";
       })
@@ -45,12 +45,12 @@ const Connexion = () => {
         const passwordError = err.response.data.errorPassword;
 
         if (loginError) {
-          console.log(loginError);
+          // console.log(loginError);
           document.querySelector(".validatorEmail").innerHTML = loginError;
         }
 
         if (passwordError) {
-          console.log(passwordError);
+          // console.log(passwordError);
           document.querySelector(".validatorPassword").innerHTML =
             passwordError;
         }

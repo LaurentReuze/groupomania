@@ -5,7 +5,8 @@ const jwtoken = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
-    console.log(req);
+    // console.log("Check token");
+    // console.log(req);
     // On recupère le token dans le header / Authorization
     // split(' ') signifie l'espace qu'il y a entre Beare et le token
     // [1] correspond au second élément du tableau (le token)
@@ -17,13 +18,14 @@ module.exports = (req, res, next) => {
     const userId = decodeToken.userId;
     const isAdmin = decodeToken.isAdmin;
     req.auth = { userId, isAdmin };
-    console.log(req);
+    // console.log(req);
     // le premier req.body vérifie si il y a un userId dans la requete
     // req.body.userId && req.body.userId vérifie si il y a un userId ET qu'il est différent
     // de userId du token
     if (req.body.userId && req.body.userId !== userId) {
       throw "le User ID ne correspond pas";
     } else {
+      // console.log("Token ok");
       next();
     }
   } catch {

@@ -1,0 +1,112 @@
+.card-container{
+width: auto;
+height: auto;
+display: flex;
+flex-direction: column;
+border-radius: 10px;
+margin: 5px;
+padding: 10px;
+background-color: $colorPrimary;
+    .headerPost{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .bodyPost{
+        .titre{
+            margin-top: 10px;
+            text-align: center;
+        }
+        .contenu{
+                white-space: normal;
+                margin-top: 10px;
+                text-align: justify;
+                overflow: visible;
+                word-wrap: break-word;
+            }
+        }
+        .modifTitre{
+            display: flex;
+            justify-content: center;
+            input{
+                width: 100%;
+                height: 30px;
+                align-items: center;
+                font-family: $font1;
+                font-size: 0.9em;
+            }
+        }
+        .modifContenu{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            textarea{
+                font-family: $font1;
+                width: 100%;
+                padding: 5px;
+            }
+            .buttonUpdate{
+                width: auto;
+                padding: 5px;
+                margin-top: 10px;
+                font-family: $font1;
+                font-size: 0.9em;
+            }
+        }
+    .iconsLine{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            img{
+                height: 22px;
+                width: 22px;
+                &:hover{
+                    transform: scale(1.2);
+                }
+            }
+            .commentIcon{
+                display: flex;
+                width: 47%;
+                span{
+                    font-style: italic;
+                    align-items: center;
+                }
+            }
+
+            .ownerAdminIcon{
+                display: flex;
+                width: 53%;
+                justify-content: flex-end;
+                
+                .iconEdit{
+                    width: 50%;
+                }
+                .iconTrash{
+                    width: 50%;
+                    display: flex;
+                    justify-content: end;
+                }
+            }
+    }
+    .imagePost{
+        text-align: center;
+        margin-top: 10px;
+    }
+    .postComment{
+
+        display: flex;
+        
+        flex-direction: column;
+        margin-bottom: 10px;
+        .editComment{
+            width: 100%;
+            border: 1px solid grey;
+            font-family: font1;
+        }
+        .sendComment{
+            display: flex;
+            justify-content: end !important;
+        }
+    }
+}
+    

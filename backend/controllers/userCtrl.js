@@ -57,7 +57,7 @@ const addUser = async (req, res) => {
       }
     })
     .catch(function (err) {
-      console.log(err);
+      // console.log(err);
       return res.status(500).json({ err });
     });
 };
@@ -75,8 +75,8 @@ const getOneUser = async (req, res) => {
       if (!user) {
         return res.status(401).json({ errorLogin: "Utilisateur non trouvé" });
       }
-      console.log(req.body.password);
-      console.log(user.password);
+      // console.log(req.body.password);
+      // console.log(user.password);
       // console.log(process.env.PRIVATE_KEY);
       bcrypt
         .compare(req.body.password, user.password)
@@ -106,7 +106,7 @@ const getInfoUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.update(req.body, { where: { id: id } });
-  res.status(200);
+  res.status(200).send(user);
 };
 
 // -------------------- Récupération des posts de l'utilisateur ----------------
@@ -127,7 +127,7 @@ const getUserPost = async (req, res) => {
     where: { id: userId }, // Ce chiffre est pour l'exemple il faudra recupérer dynamiquement l'id de l'utilisateur
   });
   res.status(200).send(data.post);
-  console.log(data);
+  // console.log(data);
 };
 
 // ------------------------- Vérification de la présence du token ---------------------------------
@@ -150,6 +150,11 @@ const requireAuth = async (req, res) => {
     res.status(401).json({ message: "Aucun Cookie" });
   }
 };
+// ------------------------- Vérification de la présence du token ---------------------------------
+const getAllUser = async (req, res) => {
+  const users = await User.findAll({});
+  res.status(200).send(users);
+};
 
 module.exports = {
   addUser,
@@ -158,4 +163,5 @@ module.exports = {
   getUserPost,
   requireAuth,
   getInfoUser,
+  getAllUser,
 };

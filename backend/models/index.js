@@ -21,7 +21,7 @@ sequelize
     console.log("Connecté");
   })
   .catch((err) => {
-    console.log("error" + err);
+    // console.log("error" + err);
   });
 
 const db = {};
@@ -42,30 +42,24 @@ db.sequelize.sync({ force: false }).then(() => {
 
 db.users.hasMany(db.posts, {
   foreignKey: "idUSER",
-  as: "post",
 });
 db.users.hasMany(db.commentaires, {
   foreignKey: "idUSER",
-  as: "commentaire",
 });
 db.posts.hasMany(db.commentaires, {
   foreignKey: "idPOST",
-  as: "commentaire",
 });
 
 db.posts.belongsTo(db.users, {
   foreignKey: "idUSER",
-  as: "user",
 });
 
 db.commentaires.belongsTo(db.users, {
   foreignKey: "idUSER",
-  as: "user",
 });
 
 db.commentaires.belongsTo(db.posts, {
   foreignKey: "idPOST",
-  as: "post",
 });
 
 module.exports = db;
