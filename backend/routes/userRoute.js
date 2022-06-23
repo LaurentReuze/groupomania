@@ -13,6 +13,8 @@ router.get("/cookie", userCtrl.requireAuth);
 
 router.get("/:id", userCtrl.getInfoUser);
 
+router.get("/:id/posts", userCtrl.getInfoUser);
+
 router.get("/", userCtrl.getAllUser);
 
 router.put("/:id", userCtrl.updateUser);

@@ -1,25 +1,30 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addPost, setPostsData } from "../feature/postsSlice";
-import { UidContext } from "./AppContext";
+import { setConnexionsData } from "../feature/connexionSlice";
+import { IsAdminContext, UidContext } from "./AppContext";
 
 const NouveauPost = () => {
   const [titrePost, setTitrePost] = useState("");
+  const [isUpdated, setIsUpdated] = useState(false);
   const [corpMessage, setCorpMessage] = useState("");
   const [image, setImage] = useState("gfdq");
   const uid = useContext(UidContext);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/auth/cookie`,
+      withCredentials: true,
+    }).then((res) => {
+      dispatch(setConnexionsData(res.data));
+      setIsUpdated(true);
+    });
+  }, [isUpdated]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const data2 = {
-      titre: titrePost,
-      contenu: corpMessage,
-      photo: image,
-      idUSER: uid,
-    };
 
     axios({
       method: "post",
@@ -34,8 +39,8 @@ const NouveauPost = () => {
       },
     })
       .then((res) => {
+        setIsUpdated(false);
         window.location = "/";
-        // dispatch(addPost(data2));
       })
       .catch((err) => {
         console.log(err);

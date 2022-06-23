@@ -1,22 +1,16 @@
-import axios from "axios";
 import React, { useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { UidContext } from "../components/AppContext";
 import NavMenu from "../components/NavMenu";
 import NouveauPost from "../components/NouveauPost";
 import Thread from "../components/Thread";
-import { setUsersData } from "../feature/usersSlice";
 
 const Actualite = () => {
-  const dispatch = useDispatch();
+  const uid = useContext(UidContext);
+
   useEffect(() => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}api/auth/`,
-      withCredentials: true,
-    }).then((res) => {
-      // console.log(res.data);
-      dispatch(setUsersData(res.data));
-    });
+    if (uid === null) {
+      window.location = "/login";
+    }
   });
 
   return (

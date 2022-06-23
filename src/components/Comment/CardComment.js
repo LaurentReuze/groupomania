@@ -1,34 +1,28 @@
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import { UidContext } from "../AppContext";
+import { dateParser } from "../../Tools/ConvDate";
+import { IsAdminContext, UidContext } from "../AppContext";
 
 const CardComment = ({ post }) => {
   const users = useSelector((state) => state.users.users);
-  const commentaires = useSelector((state) => state.commentaires.commentaires);
+  // const commentaire = useSelector((state) => state.commentaires.commentaires);
   const connexions = useSelector((state) => state.connexions.connexions);
   const uid = useContext(UidContext);
+  const isAdmin = useContext(IsAdminContext);
   const [isUpdated, setIsUpdated] = useState(false);
 
-  console.log(post);
-
-  const dateParser = (num) => {
-    let options = {
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-
-    let timestamp = Date.parse(num);
-
-    let date = new Date(timestamp).toLocaleDateString("fr-FR", options);
-
-    return date.toString();
+  const deleteComment = async (e, id) => {
+    console.log(id);
+    axios({
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}api/comment/${id}`,
+      withCredentials: true,
+      headers: { "Content-type": "application/json" },
+    }).then((res) => {
+      window.location = "/";
+    });
   };
-
-  const deleteComment = async () => {};
 
   // console.log(users);
   return (
@@ -52,8 +46,11 @@ const CardComment = ({ post }) => {
             </div>
             <div className="contenuComment">{commentaire.contenu}</div>
             <div className="iconsLine">
-              {(uid === commentaire.idUSER || connexions.isAdmin) && (
-                <div className="iconTrash" onClick={deleteComment}>
+              {(uid === commentaire.idUSER || isAdmin) && (
+                <div
+                  className="iconTrash"
+                  onClick={(e) => deleteComment(e, commentaire.id)}
+                >
                   <img src="./img/icons/trash.svg" alt="trash" />
                 </div>
               )}

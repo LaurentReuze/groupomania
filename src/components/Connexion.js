@@ -2,12 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import SetCookie from "../hooks/SetCookie";
 import RemoveCookie from "../hooks/RemoveCookie";
-import { useDispatch } from "react-redux";
-import { setUsersData } from "../feature/usersSlice";
 
 const Connexion = () => {
-  const dispatch = useDispatch();
-
   // Constante email et password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -104,7 +100,6 @@ const Connexion = () => {
           <br />
           {/* Bouton Connexion et lien mdp oublié*/}
           <div className="forgotConnexion">
-            <a href="/forgot">Mot de passe oublié</a>
             <input type="submit" value={"Connexion"} />
           </div>
         </form>

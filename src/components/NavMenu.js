@@ -4,11 +4,11 @@ import RemoveCookie from "../hooks/RemoveCookie";
 import { UidContext } from "./AppContext";
 
 const NavMenu = () => {
-  const uid = useContext(UidContext);
+  let uid = useContext(UidContext);
 
   const handleClick = (e) => {
     RemoveCookie("Groupomania");
-    uid("");
+    uid = "";
   };
 
   return (

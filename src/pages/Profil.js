@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import NavMenu from "../components/NavMenu";
 import { UidContext } from "../components/AppContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import axios from "axios";
 
@@ -14,6 +14,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 // import required modules
 import { Navigation } from "swiper";
+import { setUsersData } from "../feature/usersSlice";
+import { dateParser } from "../Tools/ConvDate";
 
 const Profil = () => {
   const uid = useContext(UidContext);
@@ -24,23 +26,17 @@ const Profil = () => {
   const [nomUpdate, setNomUpdate] = useState();
   const [emailUpdate, setEmailUpdate] = useState();
 
-  // ########################## Format Date ############################
-  const dateParser = (num) => {
-    let options = {
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-
-    let timestamp = Date.parse(num);
-
-    let date = new Date(timestamp).toLocaleDateString("fr-FR", options);
-
-    return date.toString();
-  };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/auth/`,
+      withCredentials: true,
+    }).then((res) => {
+      // console.log(res.data);
+      dispatch(setUsersData(res.data));
+    });
+  }, []);
 
   // #################### Upload des modifications identité user ####################
   const uploadUpdate = async () => {

@@ -3,19 +3,33 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommentairesData } from "../../feature/commentairesSlice";
 import CardComment from "../Comment/CardComment";
-import { deletePost, updatePost } from "../../feature/postsSlice";
-import { isAdmin, UidContext } from "../AppContext";
+import { IsAdminContext, UidContext } from "../AppContext";
+import { dateParser } from "../../Tools/ConvDate";
+import { setConnexionsData } from "../../feature/connexionSlice";
 
 const Card = ({ post }) => {
   const [loadComment, setLoadComment] = useState(true);
+  const [loadCard, setLoadCard] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [titreUpdate, setTitreUpdate] = useState();
   const [contenuUpdate, setContenuUpdate] = useState();
+  const [contenuComment, setContenuComment] = useState();
   const [affichageComment, setAffichageComment] = useState(false);
   const uid = useContext(UidContext);
-  // const [nbrComment, setNbrComment] = useState();
+  const isAdmin = useContext(IsAdminContext);
   const dispatch = useDispatch();
   const connexions = useSelector((state) => state.connexions.connexions);
+
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/auth/cookie`,
+      withCredentials: true,
+    }).then((res) => {
+      dispatch(setConnexionsData(res.data));
+      setLoadCard(true);
+    });
+  }, [loadCard]);
 
   useEffect(() => {
     axios({
@@ -25,26 +39,9 @@ const Card = ({ post }) => {
       headers: { "Content-type": "multipart/form-data" },
     }).then((res) => {
       dispatch(setCommentairesData(res.data));
-      setLoadComment(false);
+      setLoadComment(true);
     });
-  }, [loadComment, dispatch]);
-
-  const dateParser = (num) => {
-    let options = {
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-
-    let timestamp = Date.parse(num);
-
-    let date = new Date(timestamp).toLocaleDateString("fr-FR", options);
-
-    return date.toString();
-  };
+  }, [loadComment]);
 
   const uploadUpdate = async () => {
     console.log(titreUpdate);
@@ -60,9 +57,7 @@ const Card = ({ post }) => {
         contenu: contenuUpdate,
       },
     }).then((res) => {
-      setIsUpdated(false);
-      // dispatch(updatePost(post.id));
-      dispatch(updatePost(post.id));
+      loadCard(false);
     });
   };
 
@@ -73,8 +68,30 @@ const Card = ({ post }) => {
       withCredentials: true,
       headers: { "Content-type": "application/json" },
     }).then((res) => {
-      // console.log(post.id);
-      dispatch(deletePost(post.id));
+      setLoadCard(false);
+      window.location = "/";
+    });
+  };
+
+  const addComment = async () => {
+    console.log(contenuComment);
+    console.log(post.id);
+    console.log(uid);
+
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}api/comment/`,
+      withCredentials: true,
+      headers: { "Content-type": "application/json" },
+      data: {
+        contenu: contenuComment,
+        idUSER: uid,
+        idPOST: post.id,
+      },
+    }).then((res) => {
+      setLoadComment(false);
+      setLoadCard(false);
+      window.location = "/";
     });
   };
 
@@ -130,7 +147,7 @@ const Card = ({ post }) => {
             ""
           )}
         </div>
-        {(uid === post.idUSER || connexions.isAdmin) && (
+        {(uid === post.idUSER || isAdmin) && (
           <div className="ownerAdminIcon">
             <div className="iconEdit" onClick={() => setIsUpdated(!isUpdated)}>
               <img src="./img/icons/edit.svg" alt="edit" />
@@ -149,10 +166,10 @@ const Card = ({ post }) => {
                 className="editComment"
                 type="text"
                 placeholder={"Exprimez-vous!"}
-                onChange={(e) => setTitreUpdate(e.target.value)}
+                onChange={(e) => setContenuComment(e.target.value)}
               />
               <div className="sendComment">
-                <button>Commenter</button>
+                <button onClick={addComment}>Commenter</button>
               </div>
             </div>
             <CardComment post={post} />

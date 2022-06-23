@@ -1,4 +1,5 @@
 const db = require("../models");
+const { getUserId, getIsAdmin } = require("../Utils/jwt");
 
 // Creation d'un modèle principal
 const User = db.users;
@@ -39,7 +40,7 @@ const getAllPost = async (req, res) => {
 
   const posts = await Post.findAll({
     include: [User, Commentaire],
-    order: ["createdAt"],
+    order: [["createdAt", "DESC"]],
   });
   // console.log(posts);
   res.status(200).send(posts);
@@ -60,12 +61,27 @@ const updatePost = async (req, res) => {
   console.log("#####################################################");
   console.log("Controlleur Modification Post");
   console.log("#####################################################");
-  console.log(req.body);
-  console.log("#####################################################");
+
   const id = req.params.id;
-  console.log(id);
-  const post = await Post.update(req.body, { where: { id: id } });
-  res.status(200).send(post);
+  // Récupération du token
+  const token = req.headers.cookie.split("=")[1];
+  // Récupération des droits de l'utilisateur et de son N° ID
+  const userId = getUserId(token);
+  const isAdmin = getIsAdmin(token);
+
+  // console.log(isAdmin);
+  // console.log(userId);
+
+  const findPost = await Post.findOne(req.body, { where: { id: id } });
+
+  if (userId === findPost.idUSER || isAdmin) {
+    // console.log("##### C'est le même user Id #####");
+    const post = await Post.update(req.body, { where: { id: id } });
+    res.status(200).send(post);
+  } else {
+    // console.log("#### Ce n'est pas le même id User ou Admin #####");
+    res.status(401).json({ error: "Aucun droit pour le faire" });
+  }
 };
 
 // Supprimer un Post
@@ -74,8 +90,24 @@ const deletePost = async (req, res) => {
   console.log("Controlleur suppréssion d'un Post");
   console.log("#####################################################");
   const id = req.params.id;
-  await Post.destroy({ where: { id: id } });
-  res.status(200).send("Le post a été supprimé");
+  // Récupération du token
+  const token = req.headers.cookie.split("=")[1];
+  // Récupération des droits de l'utilisateur et de son N° ID
+  const userId = getUserId(token);
+  const isAdmin = getIsAdmin(token);
+
+  const findPost = await Post.findOne(req.body, { where: { id: id } });
+
+  if (userId === findPost.idUSER || isAdmin) {
+    // console.log("##### C'est le même user Id #####");
+    await Post.destroy({ where: { id: id } });
+    res.status(200).send("Le post a été supprimé");
+  } else {
+    // console.log("#### Ce n'est pas le même id User ou Admin #####");
+    res.status(401).json({ error: "Aucun droit pour le faire" });
+  }
+
+  // Récupérer les infos du posts puis comparer l'ID de l'utilisateur avec l'ID du propriétaire du post
 };
 
 // Récupération des commentaire du post

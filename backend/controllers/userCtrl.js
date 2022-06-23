@@ -145,9 +145,11 @@ const requireAuth = async (req, res) => {
     const isAdmin = decodeToken.isAdmin;
     const userObj = { userId, isAdmin };
 
+    // Rajouter info utilisateur (username, email, etc...)
+
     res.status(200).json({ userObj });
   } else {
-    res.status(401).json({ message: "Aucun Cookie" });
+    res.status(401).json("Aucun Cookie");
   }
 };
 // ------------------------- Vérification de la présence du token ---------------------------------

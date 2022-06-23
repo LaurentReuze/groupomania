@@ -9,8 +9,6 @@ router.get("/", verifToken, commentaireCtrl.getAllCommentaire);
 
 router.delete("/:id", verifToken, multer, commentaireCtrl.deleteCommentaire);
 
-//router.put("/:id", verifToken, multer, commentaireCtrl.updateCommentaire);
-
 // GET /api/post/:postId/comments
 // POST /api/post/:postId/comments
 // DELETE /api/post/:postId/comments/:commentId

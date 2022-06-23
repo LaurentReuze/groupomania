@@ -3,20 +3,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Accueil from "./pages/Accueil";
 import Actualite from "./pages/Actualite";
 import Inscription from "./pages/Inscription";
-import MdpOublie from "./pages/MdpOublie";
 import Profil from "./pages/Profil";
-import { UidContext } from "./components/AppContext";
+import { UidContext, IsAdminContext } from "./components/AppContext";
+import { useDispatch } from "react-redux";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
 import { setConnexionsData } from "./feature/connexionSlice";
 
 const App = () => {
   // -------------- Contrôle de la présence d'un cookie ----------------
 
   const dispatch = useDispatch();
-  // const uid = useSelector((state) => state.connexions.connexions.userId)
   const [uid, setUid] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+
   // La fonction de controle du token se lance dès le début du programme avec useEffect
   useEffect(() => {
     const controleToken = async () => {
@@ -31,27 +30,31 @@ const App = () => {
           setIsAdmin(res.data.userObj.isAdmin);
         })
         .catch((err) => {
-          // if (window.location.pathname !== "/login") {
+          console.log(err.response.data);
+          // if ((window.location.pathname === "/login") || (window.location.pathname === "/inscription")) {
           //   window.location = "/login";
           // }
+          if (window.location.pathname !== "/login") {
+            window.location = "/login";
+          }
         });
-      // console.log(uid);
     };
     controleToken();
-  }, [uid]);
+  }, [uid, isAdmin]);
 
   return (
     <UidContext.Provider value={uid}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Actualite />} />;
-          <Route path="/profil" element={<Profil />} />;
-          <Route path="/login" element={<Accueil />} />;
-          <Route path="/inscription" element={<Inscription />} />
-          <Route path="/forgot" element={<MdpOublie />} />
-          <Route path="*" element={<Accueil />} />
-        </Routes>
-      </BrowserRouter>
+      <IsAdminContext.Provider value={isAdmin}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Actualite />} />;
+            <Route path="/profil" element={<Profil />} />;
+            <Route path="/login" element={<Accueil />} />;
+            <Route path="/inscription" element={<Inscription />} />
+            <Route path="*" element={<Accueil />} />
+          </Routes>
+        </BrowserRouter>
+      </IsAdminContext.Provider>
     </UidContext.Provider>
   );
 };
