@@ -1,31 +1,17 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setConnexionsData } from "../feature/connexionSlice";
-import { IsAdminContext, UidContext } from "./AppContext";
+import React, { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 const NouveauPost = () => {
   const [titrePost, setTitrePost] = useState("");
-  const [isUpdated, setIsUpdated] = useState(false);
   const [corpMessage, setCorpMessage] = useState("");
   const [image, setImage] = useState("gfdq");
-  const uid = useContext(UidContext);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}api/auth/cookie`,
-      withCredentials: true,
-    }).then((res) => {
-      dispatch(setConnexionsData(res.data));
-      setIsUpdated(true);
-    });
-  }, [isUpdated]);
+  let { uidUser, postIsLoading } = useContext(UserContext);
+  const formRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}api/post/`,
@@ -35,12 +21,13 @@ const NouveauPost = () => {
         titre: titrePost,
         contenu: corpMessage,
         photo: image,
-        idUSER: uid,
+        idUSER: uidUser,
       },
     })
       .then((res) => {
-        setIsUpdated(false);
-        window.location = "/";
+        formRef.current.reset();
+        // postIsLoading = false;
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -49,7 +36,7 @@ const NouveauPost = () => {
 
   return (
     <div className="blocNewPost">
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form ref={formRef} onSubmit={(e) => handleSubmit(e)}>
         <label htmlFor="titrePost">Titre</label>
         <input
           className="titrePost"

@@ -1,28 +1,39 @@
-import React, { useContext, useEffect } from "react";
-import { UidContext } from "../components/AppContext";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import NavMenu from "../components/NavMenu";
 import NouveauPost from "../components/NouveauPost";
 import Thread from "../components/Thread";
+import { UserContext } from "../context/userContext";
 
 const Actualite = () => {
-  const uid = useContext(UidContext);
+  const { uidUser, decodeToken } = useContext(UserContext);
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  // console.log(uidUser);
 
   useEffect(() => {
-    if (uid === null) {
-      window.location = "/login";
+    if (!uidUser) {
+      <Navigate to="/login" />;
+    } else {
+      decodeToken();
     }
-  });
+  }, [uidUser]);
 
   return (
-    <div>
+    <>
       <NavMenu />
-      <h1>Fil d'Actualité</h1>
-      <div className="filsActualite">
-        <h2>Exprimez-vous !</h2>
-        <NouveauPost />
-        <Thread />
-      </div>
-    </div>
+      {uidUser && (
+        <div>
+          <h1>Fil d'Actualité</h1>
+          <div className="filsActualite">
+            <h2>Exprimez-vous !</h2>
+            <NouveauPost />
+            <Thread />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

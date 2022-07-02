@@ -1,16 +1,26 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext, useEffect, useState } from "react";
 import { dateParser } from "../../Tools/ConvDate";
-import { IsAdminContext, UidContext } from "../AppContext";
+import { UserContext } from "../../context/userContext";
 
 const CardComment = ({ post }) => {
-  const users = useSelector((state) => state.users.users);
-  // const commentaire = useSelector((state) => state.commentaires.commentaires);
-  const connexions = useSelector((state) => state.connexions.connexions);
-  const uid = useContext(UidContext);
-  const isAdmin = useContext(IsAdminContext);
-  const [isUpdated, setIsUpdated] = useState(false);
+  const { isAdmin, uidUSER } = useContext(UserContext);
+  const [userComment, setUserComment] = useState();
+  const [loadComment, setLoadComment] = useState(false);
+
+  const RecupUserComment = (commentaire) => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/auth/${commentaire.idUSER}`,
+      withCredentials: true,
+      headers: { "Content-type": "multipart/form-data" },
+    }).then((res) => {
+      console.log(res);
+      // setLoadComment(true);
+      setUserComment(res.data);
+      // console.log(userComment);
+    });
+  };
 
   const deleteComment = async (e, id) => {
     console.log(id);
@@ -20,7 +30,9 @@ const CardComment = ({ post }) => {
       withCredentials: true,
       headers: { "Content-type": "application/json" },
     }).then((res) => {
-      window.location = "/";
+      setLoadComment(true);
+
+      window.location.reload();
     });
   };
 
@@ -28,25 +40,20 @@ const CardComment = ({ post }) => {
   return (
     <div className="container">
       {post.commentaires.map((commentaire) => {
+        console.log(commentaire);
         return (
           <div className="commentContainer" key={commentaire.id}>
             <div className="descriptionComment">
-              {users.map((user) => {
-                if (commentaire.idUSER === user.id) {
-                  return (
-                    <div className="identityUser" key={commentaire.id}>
-                      {user.prenom} {user.nom}
-                    </div>
-                  );
-                }
-              })}
+              <div className="identityUser" key={commentaire.id}>
+                {commentaire.user.prenom} {commentaire.user.nom}
+              </div>
               <div className="publicationDate">
                 {dateParser(commentaire.createdAt)}
               </div>
             </div>
             <div className="contenuComment">{commentaire.contenu}</div>
             <div className="iconsLine">
-              {(uid === commentaire.idUSER || isAdmin) && (
+              {(uidUSER === commentaire.idUSER || isAdmin) && (
                 <div
                   className="iconTrash"
                   onClick={(e) => deleteComment(e, commentaire.id)}

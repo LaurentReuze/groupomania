@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SetCookie from "../hooks/SetCookie";
 
 // Récupération des différents champ du formulaire
@@ -10,6 +11,7 @@ const FormInscription = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [photo, setPhoto] = useState();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +42,7 @@ const FormInscription = () => {
       })
         .then((res) => {
           SetCookie("Groupomania", res.data.token);
-          window.location = "/";
+          navigate("/");
         })
         .catch((err) => {
           if (err.response.data.errorIdemAdress) {

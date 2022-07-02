@@ -10,10 +10,36 @@
         background-color: $colorPrimary;
         padding-left: 20px;
         padding-right: 20px;
+        
+
         .partieGauche{
             background-color: $colorSecondary;
             height: 80%;
             width: 25%;
+            display: flex;
+
+            .modifPhoto{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 10px;
+                label{
+                    text-align: center;
+                    text-decoration: underline;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+                .photoIdentité{
+                    width: 70px;
+                    margin-bottom: 20px;
+                }
+                input{
+                    border: none;
+                    width: 90%;
+                    font-size: 0.7em;
+                    border-radius: 0;
+                }
+            }
         }
         
 

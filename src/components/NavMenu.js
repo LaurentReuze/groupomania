@@ -1,40 +1,39 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import RemoveCookie from "../hooks/RemoveCookie";
-import { UidContext } from "./AppContext";
+import { UserContext } from "../context/userContext";
 
 const NavMenu = () => {
-  let uid = useContext(UidContext);
+  let { uidUser } = useContext(UserContext);
+  // console.log(uidUser);
 
   const handleClick = (e) => {
     RemoveCookie("Groupomania");
-    uid = "";
+    uidUser = "";
   };
 
   return (
     <div className="navigation">
       <img src="./logoEntete.png" alt="logo entreprise" />
-      <ul>
-        <NavLink to={"/"}>
-          <li>Accueil</li>
-        </NavLink>
-      </ul>
-      <ul>
-        <NavLink to={"/profil"}>
-          <li>Profil</li>
-        </NavLink>
-      </ul>
-      <ul>
-        {uid ? (
-          <NavLink onClick={handleClick} to={"/login"}>
-            <li>Déconnexion</li>
-          </NavLink>
-        ) : (
-          <NavLink to={"/login"}>
-            <li>Se Connecter</li>
-          </NavLink>
-        )}
-      </ul>
+      {uidUser && (
+        <>
+          <ul>
+            <NavLink to={"/"}>
+              <li>Accueil</li>
+            </NavLink>
+          </ul>
+          <ul>
+            <NavLink to={"/profil"}>
+              <li>Profil</li>
+            </NavLink>
+          </ul>
+          <ul>
+            <NavLink onClick={handleClick} to={"/login"}>
+              <li>Déconnexion</li>
+            </NavLink>
+          </ul>
+        </>
+      )}
     </div>
   );
 };

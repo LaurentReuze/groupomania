@@ -1,112 +1,67 @@
-import axios from "axios";
-import React, { useState } from "react";
-import SetCookie from "../hooks/SetCookie";
-import RemoveCookie from "../hooks/RemoveCookie";
+import React, { useState, useContext } from "react";
+import { useRef } from "react";
+import { UserContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const Connexion = () => {
-  // Constante email et password
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const { signIn, uidUser, decodeToken } = useContext(UserContext);
 
-  const handleSubmit = (e) => {
-    // Ne recharge pas la page
+  const navigate = useNavigate();
+
+  const formRef = useRef();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     document.querySelector(".validatorEmail").innerHTML = "";
     document.querySelector(".validatorPassword").innerHTML = "";
 
-    // Axios exactement comme fetch. Enchange avec l'API
-    axios({
-      // method d'envoi à l'API
-      method: "post",
-      // adresse de l'API - REACT_APP_API_URL est une variable d'environnement
-      // Elle permet de pouvoir changer facilement une seule fois l'adresse au lieu d'aller
-      // partout dans le code pour changer l'adresse
-      url: `${process.env.REACT_APP_API_URL}api/auth/login`,
-      withCredentials: true,
-      data: {
-        email: email,
-        password: password,
-      },
-    })
-      .then((res) => {
-        RemoveCookie("Groupomania");
-        SetCookie("Groupomania", res.data.token);
-        window.location = "/";
-      })
-      .catch((err) => {
-        console.log(err);
-
-        const tabErreur = err.response.data;
-        const loginError = err.response.data.errorLogin;
-        const passwordError = err.response.data.errorPassword;
-
-        if (loginError) {
-          // console.log(loginError);
-          document.querySelector(".validatorEmail").innerHTML = loginError;
-        }
-
-        if (passwordError) {
-          // console.log(passwordError);
-          document.querySelector(".validatorPassword").innerHTML =
-            passwordError;
-        }
-
-        for (let index = 0; index < tabErreur.length; index++) {
-          const messageErreur = tabErreur[index].message;
-          const champ = tabErreur[index].context.label;
-          if (champ === "email") {
-            document.querySelector(".validatorEmail").innerHTML = messageErreur;
-          }
-          if (champ === "password") {
-            document.querySelector(".validatorPassword").innerHTML =
-              messageErreur;
-          }
-        }
-      });
+    try {
+      await signIn(email, password);
+      // console.log(email);
+      // console.log(password);
+      // await decodeToken();
+      // console.log(uidUser);
+      formRef.current.reset();
+      navigate("/");
+    } catch (err) {
+      // console.log(err);
+      navigate("/login");
+    }
   };
 
   return (
     <div className="connexion">
       <div className="coprsConnexion">
-        {/* ----------------- Début formulaire --------------------- */}
-        {/* onSubmit signifie à l'envoi du formulaire, on execute la fonction handleSubmit */}
-        <form onSubmit={(e) => handleSubmit(e)}>
-          {/* Champ Email */}
+        <form ref={formRef} onSubmit={(e) => handleSubmit(e)}>
           <label htmlFor="email">Email</label>
           <input
-            type="text"
+            type="email"
             name="email"
             id="email"
+            required
             placeholder="Saisir votre email"
-            // onChange signifie au changment du champ on stocke la valeur dans la constante setEmail
             onChange={(e) => setEmail(e.target.value)}
-            value={email}
           />
-          {/* Cette div va permettre de mettre l'erreur du backend si nécéssaire */}
           <div className="validatorEmail"></div>
           <br />
-          {/* Champ Mot de passe */}
           <label htmlFor="password">Mot de passe</label>
           <input
             type="password"
             name="password"
             id="password"
+            required
             placeholder="Saisir votre mot de passe"
             onChange={(e) => setPassword(e.target.value)}
-            value={password}
           />
-          {/* Cette div va permettre de mettre l'erreur du backend si nécéssaire */}
           <div className="validatorPassword"></div>
           <br />
-          {/* Bouton Connexion et lien mdp oublié*/}
-          <div className="forgotConnexion">
-            <input type="submit" value={"Connexion"} />
-          </div>
+          <button>Envoyer</button>
         </form>
         <br />
-        {/* Lien Nouveau Compte */}
         <div className="nouveauCompte">
-          <a href="/inscription">Nouveau Compte</a>
+          <a href="/inscription"> Nouveau Compte</a>
         </div>
       </div>
     </div>

@@ -39,7 +39,13 @@ const getAllPost = async (req, res) => {
   console.log("#####################################################");
 
   const posts = await Post.findAll({
-    include: [User, Commentaire],
+    include: [
+      User,
+      {
+        model: Commentaire,
+        include: User,
+      },
+    ],
     order: [["createdAt", "DESC"]],
   });
   // console.log(posts);
@@ -72,7 +78,7 @@ const updatePost = async (req, res) => {
   // console.log(isAdmin);
   // console.log(userId);
 
-  const findPost = await Post.findOne(req.body, { where: { id: id } });
+  const findPost = await Post.findOne({ where: { id: id } });
 
   if (userId === findPost.idUSER || isAdmin) {
     // console.log("##### C'est le même user Id #####");
@@ -96,14 +102,21 @@ const deletePost = async (req, res) => {
   const userId = getUserId(token);
   const isAdmin = getIsAdmin(token);
 
-  const findPost = await Post.findOne(req.body, { where: { id: id } });
+  const findPost = await Post.findOne({ where: { id: id } });
+  // console.log("############# User Id #####################");
+  // console.log(userId);
+  // console.log("############# FindPost #####################");
+  // console.log(findPost);
+  // console.log("############# FindPost idUser #####################");
+  // console.log(findPost.idUSER);
+  // console.log("##################################");
 
   if (userId === findPost.idUSER || isAdmin) {
-    // console.log("##### C'est le même user Id #####");
+    console.log("##### C'est le même user Id #####");
     await Post.destroy({ where: { id: id } });
     res.status(200).send("Le post a été supprimé");
   } else {
-    // console.log("#### Ce n'est pas le même id User ou Admin #####");
+    console.log("#### Ce n'est pas le même id User ou Admin #####");
     res.status(401).json({ error: "Aucun droit pour le faire" });
   }
 

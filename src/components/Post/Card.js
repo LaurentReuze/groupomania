@@ -1,49 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { setCommentairesData } from "../../feature/commentairesSlice";
 import CardComment from "../Comment/CardComment";
-import { IsAdminContext, UidContext } from "../AppContext";
 import { dateParser } from "../../Tools/ConvDate";
-import { setConnexionsData } from "../../feature/connexionSlice";
+import { UserContext } from "../../context/userContext";
 
 const Card = ({ post }) => {
-  const [loadComment, setLoadComment] = useState(true);
   const [loadCard, setLoadCard] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [titreUpdate, setTitreUpdate] = useState();
   const [contenuUpdate, setContenuUpdate] = useState();
   const [contenuComment, setContenuComment] = useState();
   const [affichageComment, setAffichageComment] = useState(false);
-  const uid = useContext(UidContext);
-  const isAdmin = useContext(IsAdminContext);
-  const dispatch = useDispatch();
-  const connexions = useSelector((state) => state.connexions.connexions);
 
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}api/auth/cookie`,
-      withCredentials: true,
-    }).then((res) => {
-      dispatch(setConnexionsData(res.data));
-      setLoadCard(true);
-    });
-  }, [loadCard]);
-
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}api/comment/`,
-      withCredentials: true,
-      headers: { "Content-type": "multipart/form-data" },
-    }).then((res) => {
-      dispatch(setCommentairesData(res.data));
-      setLoadComment(true);
-    });
-  }, [loadComment]);
+  const { uidUser, isAdmin } = useContext(UserContext);
 
   const uploadUpdate = async () => {
+    console.log(post.id);
     console.log(titreUpdate);
     console.log(contenuUpdate);
 
@@ -57,11 +29,13 @@ const Card = ({ post }) => {
         contenu: contenuUpdate,
       },
     }).then((res) => {
-      loadCard(false);
+      setLoadCard(true);
+      window.location.reload();
     });
   };
 
   const deletedPost = async () => {
+    console.log(post.id);
     axios({
       method: "delete",
       url: `${process.env.REACT_APP_API_URL}api/post/${post.id}`,
@@ -69,14 +43,13 @@ const Card = ({ post }) => {
       headers: { "Content-type": "application/json" },
     }).then((res) => {
       setLoadCard(false);
-      window.location = "/";
+      window.location.reload();
     });
   };
 
   const addComment = async () => {
     console.log(contenuComment);
     console.log(post.id);
-    console.log(uid);
 
     axios({
       method: "post",
@@ -85,13 +58,12 @@ const Card = ({ post }) => {
       headers: { "Content-type": "application/json" },
       data: {
         contenu: contenuComment,
-        idUSER: uid,
+        idUSER: uidUser,
         idPOST: post.id,
       },
     }).then((res) => {
-      setLoadComment(false);
       setLoadCard(false);
-      window.location = "/";
+      window.location.reload();
     });
   };
 
@@ -147,7 +119,7 @@ const Card = ({ post }) => {
             ""
           )}
         </div>
-        {(uid === post.idUSER || isAdmin) && (
+        {(uidUser === post.idUSER || isAdmin) && (
           <div className="ownerAdminIcon">
             <div className="iconEdit" onClick={() => setIsUpdated(!isUpdated)}>
               <img src="./img/icons/edit.svg" alt="edit" />

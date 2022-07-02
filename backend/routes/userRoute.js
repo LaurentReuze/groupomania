@@ -7,16 +7,16 @@ router.post("/signup", multer, userCtrl.addUser);
 
 router.post("/login", userCtrl.getOneUser);
 
-router.get("/profil", verifToken, userCtrl.getUserPost);
+router.get("/profil/:id", verifToken, userCtrl.getUserPost);
 
-router.get("/cookie", userCtrl.requireAuth);
+router.get("/cookie", verifToken, userCtrl.requireAuth);
 
-router.get("/:id", userCtrl.getInfoUser);
+router.get("/:id", verifToken, userCtrl.getInfoUser);
 
-router.get("/:id/posts", userCtrl.getInfoUser);
+router.get("/:id/posts", verifToken, userCtrl.getInfoUser);
 
-router.get("/", userCtrl.getAllUser);
+router.get("/", verifToken, userCtrl.getAllUser);
 
-router.put("/:id", userCtrl.updateUser);
+router.put("/:id", verifToken, multer, userCtrl.updateUser);
 
 module.exports = router;

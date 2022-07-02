@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Card from "./Post/Card";
-import { useDispatch, useSelector } from "react-redux";
-import { setPostsData } from "../feature/postsSlice";
+import { UserContext } from "../context/userContext";
 
 const Thread = () => {
-  const [loadPost, setLoadPost] = useState(true);
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
+  let { postIsLoading } = useContext(UserContext);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     axios({
@@ -16,10 +14,10 @@ const Thread = () => {
       withCredentials: true,
       headers: { "Content-type": "multipart/form-data" },
     }).then((res) => {
-      dispatch(setPostsData(res.data));
-      setLoadPost(false);
+      setPosts(res.data);
+      postIsLoading = true;
     });
-  }, [loadPost, dispatch]);
+  }, [postIsLoading]);
 
   // console.log(posts);
   // console.log(postsTrie);

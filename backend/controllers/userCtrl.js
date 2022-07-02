@@ -105,6 +105,12 @@ const getInfoUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const id = req.params.id;
+  console.log(req.body);
+
+  req.body.photo = `${req.protocol}://${req.get("host")}/images/${
+    req.file.filename
+  }`;
+
   const user = await User.update(req.body, { where: { id: id } });
   res.status(200).send(user);
 };
@@ -113,20 +119,13 @@ const updateUser = async (req, res) => {
 
 const getUserPost = async (req, res) => {
   // --------- recupération du numéro id de l'utilisateur via le token ------------
-  // récupération du token
-  const token = req.headers.cookie.split("=")[1];
-  const userId = jwt.getUserId(token);
+  const id = req.params.id;
   //
-  const data = await User.findOne({
-    include: [
-      {
-        model: Post,
-        as: "post",
-      },
-    ],
-    where: { id: userId }, // Ce chiffre est pour l'exemple il faudra recupérer dynamiquement l'id de l'utilisateur
+  const post = await Post.findAll({
+    order: [["createdAt", "DESC"]],
+    where: { idUSER: id },
   });
-  res.status(200).send(data.post);
+  res.status(200).send(post);
   // console.log(data);
 };
 
