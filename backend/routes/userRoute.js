@@ -9,7 +9,7 @@ router.post("/login", userCtrl.getOneUser);
 
 router.get("/profil/:id", verifToken, userCtrl.getUserPost);
 
-router.get("/cookie", verifToken, userCtrl.requireAuth);
+router.get("/cookie", userCtrl.requireAuth);
 
 router.get("/:id", verifToken, userCtrl.getInfoUser);
 
