@@ -45,7 +45,7 @@ export function UserContextProvider(props) {
     }).then((res) => {
       RemoveCookie("Groupomania");
       SetCookie("Groupomania", res.data.token);
-      decodeToken();
+      // decodeToken();
     });
   };
 

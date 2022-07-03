@@ -17,11 +17,13 @@ const Connexion = () => {
     document.querySelector(".validatorEmail").innerHTML = "";
     document.querySelector(".validatorPassword").innerHTML = "";
 
+    console.log(password);
+
     try {
       await signIn(email, password);
       // console.log(email);
       // console.log(password);
-      // await decodeToken();
+      await decodeToken();
       // console.log(uidUser);
       formRef.current.reset();
       navigate("/");
